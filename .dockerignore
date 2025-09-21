@@ -1,0 +1,9 @@
+.git
+.github
+node_modules
+npm-debug.log
+.vercel
+.vscode
+**/*.log
+**/.DS_Store
+

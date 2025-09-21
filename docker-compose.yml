@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    image: tb-plus:latest
+    container_name: tb-plus
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/landing/" ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # Example Wisp server (Ultraviolet/Bare) via community image
+  # Uncomment and set WS_URL in the app if needed
+  # wisp:
+  #   image: ghcr.io/tomphttp/wisp:latest
+  #   container_name: wisp
+  #   ports:
+  #     - "8081:8080"
+  #   restart: unless-stopped
+
