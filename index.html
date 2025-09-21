@@ -24,26 +24,29 @@
     <script>
       (function () {
         try {
+          // If opened from file://, try common localhost ports and jump to /landing/
           if (location.protocol === 'file:') {
-            const ports = [8080, 3000, 5173, 8000, 80];
-            const testPath = '/tb.svg';
-            const ping = (port) => new Promise((resolve) => {
-              let done = false;
-              const img = new Image();
-              const finish = () => { if (!done) { done = true; resolve(port); } };
-              img.onload = finish;
-              img.onerror = finish;
-              img.src = `http://localhost:${port}${testPath}?t=${Date.now()}`;
-              setTimeout(() => resolve(null), 800);
-            });
+            const ports = [5173, 8080, 3000, 8000];
+            const test = async (port) => {
+              const ctrl = new AbortController();
+              const to = setTimeout(() => ctrl.abort(), 900);
+              try {
+                await fetch(`http://localhost:${port}/tb.svg?t=${Date.now()}`, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal });
+                clearTimeout(to);
+                return true;
+              } catch (_) {
+                clearTimeout(to);
+                return false;
+              }
+            };
             (async () => {
               for (const p of ports) {
-                const ok = await ping(p);
-                if (ok) { location.href = `http://localhost:${ok}/landing/`; return; }
+                if (await test(p)) { location.href = `http://localhost:${p}/landing/`; return; }
               }
             })();
           } else if ((location.hostname === 'localhost' || location.hostname === '127.0.0.1') && (location.pathname === '/' || location.pathname === '/index.html')) {
-            location.replace('/landing/');
+            // If already on localhost, keep same origin and go to /landing/
+            location.replace((location.origin || '') + '/landing/');
           }
         } catch (e) {}
       })();
