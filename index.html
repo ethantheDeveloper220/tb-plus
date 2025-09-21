@@ -22,6 +22,33 @@
   </head>
   <body>
     <script>
+      (function () {
+        try {
+          if (location.protocol === 'file:') {
+            const ports = [8080, 3000, 5173, 8000, 80];
+            const testPath = '/tb.svg';
+            const ping = (port) => new Promise((resolve) => {
+              let done = false;
+              const img = new Image();
+              const finish = () => { if (!done) { done = true; resolve(port); } };
+              img.onload = finish;
+              img.onerror = finish;
+              img.src = `http://localhost:${port}${testPath}?t=${Date.now()}`;
+              setTimeout(() => resolve(null), 800);
+            });
+            (async () => {
+              for (const p of ports) {
+                const ok = await ping(p);
+                if (ok) { location.href = `http://localhost:${ok}/landing/`; return; }
+              }
+            })();
+          } else if ((location.hostname === 'localhost' || location.hostname === '127.0.0.1') && (location.pathname === '/' || location.pathname === '/index.html')) {
+            location.replace('/landing/');
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script>
       (function(){
         try {
           var url = new URL(location.href);
