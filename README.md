@@ -1,7 +1,7 @@
 # Terbium Plus (tb-plus)
 
 > **🚧 BETA NOTICE 🚧**  
-> Terbium Plus is currently in **beta** and **has not been tested on Linux or macOS**.  
+> Terbium Plus is currently in **beta & costly** and **has not been tested on Linux or macOS**.  
 > If you are using one of these operating systems, you are on your own for now!  
 > Community feedback and pull requests for cross-platform support are welcome.
 
