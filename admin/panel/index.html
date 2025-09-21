@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - Terbium</title>
+  <link rel="icon" href="/tb-admin.svg"/>
+  <link rel="stylesheet" href="/assets/index-ClmEQiFL.css"/>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #fff;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+      margin: 0;
+      min-height: 100vh;
+    }
+    .admin-wrap {
+      max-width: 650px;
+      margin: 56px auto 0 auto;
+      padding: 40px 28px 48px 28px;
+      background: rgba(24,24,36,0.98);
+      border-radius: 22px;
+      box-shadow: 0 8px 48px #0007, 0 1.5px 0 #38bdf8;
+      position: relative;
+      z-index: 1;
+    }
+    .admin-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 30px;
+      justify-content: center;
+    }
+    .admin-logo img, .admin-logo svg {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: #222;
+      border: 2.5px solid #38bdf8;
+      box-shadow: 0 2px 12px #0ea5e9aa;
+      display: block;
+    }
+    .admin-logo span {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #7dd3fc;
+      text-shadow: 0 2px 12px #0ea5e9cc;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    h2 {
+      margin-top: 38px;
+      font-size: 1.35rem;
+      color: #38bdf8;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 8px #0ea5e955;
+    }
+    .admin-section {
+      margin-bottom: 36px;
+      background: rgba(30,41,59,0.85);
+      border-radius: 12px;
+      padding: 18px 18px 10px 18px;
+      box-shadow: 0 2px 12px #0ea5e91a;
+      border: 1.5px solid #334155;
+    }
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 600;
+      color: #a5b4fc;
+      font-size: 1.05rem;
+      letter-spacing: 0.2px;
+    }
+    input[type="text"], input[type="password"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 7px;
+      border: 1.5px solid #334155;
+      background: #232336;
+      color: #fff;
+      margin-bottom: 14px;
+      font-size: 1.07rem;
+      transition: border 0.2s;
+      outline: none;
+      box-shadow: 0 1px 4px #0ea5e91a;
+    }
+    input:focus, textarea:focus, select:focus {
+      border: 1.5px solid #38bdf8;
+      background: #232346;
+    }
+    button {
+      background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 11px 26px;
+      font-size: 1.07rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 2px 12px #0ea5e955;
+      transition: background 0.18s, box-shadow 0.18s;
+      letter-spacing: 0.2px;
+    }
+    button:active {
+      background: linear-gradient(90deg, #0ea5e9 0%, #6366f1 100%);
+      box-shadow: 0 1px 4px #0ea5e955;
+    }
+    .admin-status {
+      margin-top: 12px;
+      font-size: 1.07rem;
+      color: #fbbf24;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+    }
+    .admin-list {
+      background: #232336;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 10px;
+      font-size: 1.07rem;
+      color: #e0e7ef;
+      box-shadow: 0 1px 4px #0ea5e91a;
+    }
+    .admin-list strong {
+      color: #7dd3fc;
+    }
+    .env-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .env-row input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .env-row button {
+      padding: 7px 14px;
+      font-size: 1rem;
+      margin-top: 0;
+      background: #ef4444;
+      font-weight: 600;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px #ef444455;
+    }
+    .admin-footer {
+      margin-top: 48px;
+      text-align: center;
+      color: #64748b;
+      font-size: 1.05rem;
+      opacity: 0.8;
+      letter-spacing: 0.1px;
+    }
+    /* Popups */
+    .admin-popup-bg {
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(16,23,42,0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s;
+    }
+    .admin-popup {
+      background: #18181c;
+      border-radius: 18px;
+      box-shadow: 0 8px 48px #000a, 0 1.5px 0 #38bdf8;
+      padding: 36px 32px 28px 32px;
+      min-width: 320px;
+      max-width: 95vw;
+      text-align: center;
+      position: relative;
+      animation: popIn 0.22s;
+    }
+    .admin-popup .admin-popup-logo {
+      margin-bottom: 18px;
+    }
+    .admin-popup .admin-popup-logo svg {
+      width: 54px;
+      height: 54px;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      background: #232336;
+      box-shadow: 0 2px 12px #0ea5e9aa;
+      border: 2.5px solid #38bdf8;
+    }
+    .admin-popup h3 {
+      font-size: 1.35rem;
+      color: #38bdf8;
+      margin-bottom: 10px;
+      margin-top: 0;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+    .admin-popup p {
+      color: #e0e7ef;
+      font-size: 1.07rem;
+      margin-bottom: 0;
+      margin-top: 0;
+      line-height: 1.6;
+    }
+    .admin-popup .admin-popup-btn {
+      margin-top: 22px;
+      background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 10px 28px;
+      font-size: 1.07rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #0ea5e955;
+      transition: background 0.18s;
+    }
+    .admin-popup .admin-popup-btn:active {
+      background: linear-gradient(90deg, #0ea5e9 0%, #6366f1 100%);
+    }
+    .admin-popup .admin-popup-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 1.5rem;
+      cursor: pointer;
+      font-weight: 700;
+      opacity: 0.7;
+      transition: opacity 0.15s;
+    }
+    .admin-popup .admin-popup-close:hover {
+      opacity: 1;
+      color: #38bdf8;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    /* Feature list */
+    .admin-feature-list {
+      text-align: left;
+      margin: 18px 0 0 0;
+      padding: 0 0 0 0;
+      list-style: none;
+    }
+    .admin-feature-list li {
+      margin-bottom: 10px;
+      font-size: 1.07rem;
+      color: #a5b4fc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-feature-list li svg {
+      width: 1.1em;
+      height: 1.1em;
+      color: #38bdf8;
+      flex-shrink: 0;
+    }
+    /* Placeholder styling */
+    ::placeholder {
+      color: #64748b;
+      opacity: 1;
+      font-style: italic;
+    }
+    /* Responsive */
+    @media (max-width: 700px) {
+      .admin-wrap { padding: 18px 2vw 24px 2vw; }
+      .admin-popup { padding: 22px 6vw 18px 6vw; min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <div class="admin-logo">
+      <!-- tb-admin.svg inline -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+        <rect width="48" height="48" rx="12" fill="#232336"/>
+        <circle cx="24" cy="24" r="16" fill="#38bdf8"/>
+        <path d="M24 16a6 6 0 0 1 6 6v2a6 6 0 0 1-12 0v-2a6 6 0 0 1 6-6zm0 18c-4.418 0-8-1.79-8-4v-2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2c0 2.21-3.582 4-8 4z" fill="#fff"/>
+      </svg>
+      <span>Terbium Admin</span>
+    </div>
+    <div id="admin-auth-section" class="admin-section">
+      <label for="admin-key-input">Enter Admin Key</label>
+      <input type="password" id="admin-key-input" placeholder="Enter your admin key to unlock features" autocomplete="off"/>
+      <button id="admin-key-btn">Login</button>
+    </div>
+    <div id="admin-panel" style="display:none;">
+      <h2>Plan Keys</h2>
+      <div class="admin-section">
+        <label for="pro-key">Pro Key</label>
+        <input type="text" id="pro-key" placeholder="Set Pro plan key (e.g. TB-PRO-XXXX)" autocomplete="off"/>
+        <label for="ultimate-key">Ultimate Key</label>
+        <input type="text" id="ultimate-key" placeholder="Set Ultimate plan key (e.g. TB-ULT-XXXX)" autocomplete="off"/>
+        <button id="save-keys-btn">Save Keys</button>
+        <div class="admin-status" id="keys-status"></div>
+      </div>
+      <h2>Environments</h2>
+      <div class="admin-section" id="env-section">
+        <div id="env-list" class="admin-list"></div>
+        <form id="add-env-form" style="margin-top:12px;">
+          <div class="env-row">
+            <input type="text" id="new-env-name" placeholder="Environment name (e.g. staging)" required/>
+            <input type="text" id="new-env-auth" placeholder="Auth key (optional)"/>
+            <button type="submit">Add</button>
+          </div>
+        </form>
+        <div class="admin-status" id="env-status"></div>
+      </div>
+      <h2>Site Settings</h2>
+      <div class="admin-section">
+        <label for="site-name">Site Name</label>
+        <input type="text" id="site-name" placeholder="Set the site name (e.g. Terbium)"/>
+        <label for="site-logo">Logo URL</label>
+        <input type="text" id="site-logo" placeholder="Set the logo URL (e.g. /assets/logo.svg)"/>
+        <button id="save-site-btn">Save Settings</button>
+        <div class="admin-status" id="site-status"></div>
+      </div>
+      <h2>Advanced Features</h2>
+      <div class="admin-section">
+        <label for="session-limit">Free Plan Session Limit (minutes)</label>
+        <input type="number" id="session-limit" min="1" max="120" placeholder="Default: 5"/>
+        <button id="save-session-btn">Set Session Limit</button>
+        <div class="admin-status" id="session-status"></div>
+        <label for="feature-toggle" style="margin-top:18px;">Feature Toggles</label>
+        <select id="feature-toggle">
+          <option value="custom-env">Enable Custom Environments</option>
+          <option value="beta-access">Enable Beta Access</option>
+          <option value="maintenance">Enable Maintenance Mode</option>
+          <option value="logging">Enable Advanced Logging</option>
+          <option value="analytics">Enable Analytics</option>
+          <option value="dark-mode">Force Dark Mode</option>
+        </select>
+        <button id="toggle-feature-btn">Toggle Feature</button>
+        <div class="admin-status" id="feature-status"></div>
+      </div>
+      <h2>Broadcast Message</h2>
+      <div class="admin-section">
+        <label for="broadcast-msg">Send a message to all users</label>
+        <textarea id="broadcast-msg" rows="2" placeholder="Type your announcement here..."></textarea>
+        <button id="send-broadcast-btn">Send Broadcast</button>
+        <div class="admin-status" id="broadcast-status"></div>
+      </div>
+      <h2>Backup & Restore</h2>
+      <div class="admin-section">
+        <button id="backup-btn">Download Backup</button>
+        <input type="file" id="restore-file" style="display:none;" accept=".json"/>
+        <button id="restore-btn">Restore from File</button>
+        <div class="admin-status" id="backup-status"></div>
+      </div>
+    </div>
+    <div class="admin-footer">
+      Terbium Admin Panel &copy; 2024
+    </div>
+  </div>
+  <!-- POPUP MODAL -->
+  <div class="admin-popup-bg" id="admin-popup-bg">
+    <div class="admin-popup" id="admin-popup">
+      <button class="admin-popup-close" id="admin-popup-close" aria-label="Close">&times;</button>
+      <div class="admin-popup-logo" id="admin-popup-logo">
+        <!-- tb-admin.svg will be injected here -->
+      </div>
+      <h3 id="admin-popup-title"></h3>
+      <p id="admin-popup-msg"></p>
+      <div id="admin-popup-extra"></div>
+      <button class="admin-popup-btn" id="admin-popup-btn" style="display:none;">OK</button>
+    </div>
+  </div>
+  <script>
+    // --- Admin Key Logic ---
+    const ADMIN_KEY = "tb-owner-1234"; // In real app, never expose this in client code!
+    const versionData = {
+      "pro": "TB-PRO-PLACEHOLDER",
+      "ultimate": "TB-ULT-PLACEHOLDER",
+      "environments": ["normal", "beta"],
+      "siteName": "Terbium",
+      "siteLogo": "/assets/logo.svg",
+      "sessionLimit": 5,
+      "featureToggles": {},
+      "broadcasts": []
+    };
+    // tb-admin.svg as SVG string
+    const adminSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="12" fill="#232336"/><circle cx="24" cy="24" r="16" fill="#38bdf8"/><path d="M24 16a6 6 0 0 1 6 6v2a6 6 0 0 1-12 0v-2a6 6 0 0 1 6-6zm0 18c-4.418 0-8-1.79-8-4v-2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2c0 2.21-3.582 4-8 4z" fill="#fff"/></svg>`;
+    // SVG for checkmark
+    const checkSVG = `<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 6.293a1 1 0 0 1 0 1.414l-7.004 7.004a1 1 0 0 1-1.414 0l-3.004-3.004a1 1 0 1 1 1.414-1.414l2.297 2.297 6.297-6.297a1 1 0 0 1 1.414 0z" clip-rule="evenodd"/></svg>`;
+    // SVG for error
+    const errorSVG = `<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-1-5a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0v-2zm0-6a1 1 0 0 1 2 0v4a1 1 0 1 1-2 0V7z" clip-rule="evenodd"/></svg>`;
+    // SVG for info
+    const infoSVG = `<svg viewBox="0 0 20 20" fill="currentColor"><path d="M18 10A8 8 0 1 1 2 10a8 8 0 0 1 16 0zm-7-4a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm-2 3a1 1 0 0 1 1-1h.01a1 1 0 0 1 1 1v4a1 1 0 1 1-2 0v-4z"/></svg>`;
+
+    // Load from localStorage if present
+    function loadAdminData() {
+      try {
+        const keys = JSON.parse(localStorage.getItem('tb:admin:keys') || '{}');
+        if (keys.pro) versionData.pro = keys.pro;
+        if (keys.ultimate) versionData.ultimate = keys.ultimate;
+        const envs = JSON.parse(localStorage.getItem('tb:admin:envs') || 'null');
+        if (Array.isArray(envs)) versionData.environments = envs;
+        const site = JSON.parse(localStorage.getItem('tb:admin:site') || '{}');
+        if (site.siteName) versionData.siteName = site.siteName;
+        if (site.siteLogo) versionData.siteLogo = site.siteLogo;
+        const sessionLimit = Number(localStorage.getItem('tb:admin:sessionLimit'));
+        if (sessionLimit) versionData.sessionLimit = sessionLimit;
+        const toggles = JSON.parse(localStorage.getItem('tb:admin:featureToggles') || '{}');
+        versionData.featureToggles = toggles;
+        const broadcasts = JSON.parse(localStorage.getItem('tb:admin:broadcasts') || '[]');
+        versionData.broadcasts = broadcasts;
+      } catch(e){}
+    }
+    function saveKeys(pro, ultimate) {
+      localStorage.setItem('tb:admin:keys', JSON.stringify({pro, ultimate}));
+      versionData.pro = pro;
+      versionData.ultimate = ultimate;
+    }
+    function saveEnvs(envs) {
+      localStorage.setItem('tb:admin:envs', JSON.stringify(envs));
+      versionData.environments = envs;
+    }
+    function saveSite(name, logo) {
+      localStorage.setItem('tb:admin:site', JSON.stringify({siteName: name, siteLogo: logo}));
+      versionData.siteName = name;
+      versionData.siteLogo = logo;
+    }
+    function saveSessionLimit(limit) {
+      localStorage.setItem('tb:admin:sessionLimit', String(limit));
+      versionData.sessionLimit = limit;
+    }
+    function saveFeatureToggles(toggles) {
+      localStorage.setItem('tb:admin:featureToggles', JSON.stringify(toggles));
+      versionData.featureToggles = toggles;
+    }
+    function saveBroadcasts(broadcasts) {
+      localStorage.setItem('tb:admin:broadcasts', JSON.stringify(broadcasts));
+      versionData.broadcasts = broadcasts;
+    }
+    function renderEnvs() {
+      const envList = document.getElementById('env-list');
+      envList.innerHTML = '';
+      const envs = versionData.environments || [];
+      if (!envs.length) {
+        envList.textContent = "No environments defined.";
+        return;
+      }
+      envs.forEach((env, idx) => {
+        let name = typeof env === "string" ? env : (env.name || "");
+        let auth = typeof env === "object" && env.auth ? env.auth : "";
+        const row = document.createElement('div');
+        row.className = "env-row";
+        row.innerHTML = `<strong>${name}</strong>${auth ? ' <span style="color:#fbbf24;font-size:0.95em;">(auth: '+auth+')</span>' : ''} <button data-idx="${idx}">Delete</button>`;
+        row.querySelector('button').onclick = function() {
+          versionData.environments.splice(idx, 1);
+          saveEnvs(versionData.environments);
+          renderEnvs();
+          showPopup("Success", "Environment deleted.", "success");
+        };
+        envList.appendChild(row);
+      });
+    }
+    function requireAdmin() {
+      document.getElementById('admin-auth-section').style.display = '';
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('admin-key-input').value = '';
+    }
+    function unlockAdmin() {
+      document.getElementById('admin-auth-section').style.display = 'none';
+      document.getElementById('admin-panel').style.display = '';
+      // Fill fields
+      document.getElementById('pro-key').value = versionData.pro || "";
+      document.getElementById('ultimate-key').value = versionData.ultimate || "";
+      document.getElementById('site-name').value = versionData.siteName || "";
+      document.getElementById('site-logo').value = versionData.siteLogo || "";
+      document.getElementById('session-limit').value = versionData.sessionLimit || 5;
+      renderEnvs();
+      showWelcomePopup();
+    }
+    // --- Popup logic ---
+    function showPopup(title, msg, type, extraHTML) {
+      const bg = document.getElementById('admin-popup-bg');
+      const popup = document.getElementById('admin-popup');
+      const logo = document.getElementById('admin-popup-logo');
+      const t = document.getElementById('admin-popup-title');
+      const m = document.getElementById('admin-popup-msg');
+      const btn = document.getElementById('admin-popup-btn');
+      const extra = document.getElementById('admin-popup-extra');
+      // Set logo: always tb-admin.svg
+      logo.innerHTML = adminSVG;
+      t.textContent = title;
+      m.innerHTML = msg;
+      extra.innerHTML = extraHTML || "";
+      btn.style.display = "";
+      btn.onclick = () => { bg.style.display = "none"; };
+      document.getElementById('admin-popup-close').onclick = () => { bg.style.display = "none"; };
+      bg.style.display = "flex";
+    }
+    function showWelcomePopup() {
+      showPopup(
+        "Welcome, Admin!",
+        `You have unlocked the admin panel.<br><br>
+        <b>Features you can manage:</b>
+        <ul class="admin-feature-list">
+          <li>${checkSVG} <b>Set Pro/Ultimate plan keys</b></li>
+          <li>${checkSVG} <b>Create, edit, and delete environments</b></li>
+          <li>${checkSVG} <b>Change site name and logo</b></li>
+          <li>${checkSVG} <b>Set session time limit for Free plan</b></li>
+          <li>${checkSVG} <b>Toggle advanced features (Beta, Maintenance, Logging, Analytics, Dark Mode, Custom Envs)</b></li>
+          <li>${checkSVG} <b>Send broadcast messages to all users</b></li>
+          <li>${checkSVG} <b>Backup and restore all admin settings</b></li>
+          <li>${checkSVG} <b>View and manage feature toggles</b></li>
+          <li>${checkSVG} <b>Force maintenance mode for all users</b></li>
+          <li>${checkSVG} <b>Download and restore configuration</b></li>
+        </ul>
+        <br>Use the sections below to manage your site.`,
+        "info"
+      );
+      document.getElementById('admin-popup-btn').textContent = "Let's Go!";
+    }
+    // Auth logic
+    document.getElementById('admin-key-btn').onclick = function() {
+      const key = document.getElementById('admin-key-input').value.trim();
+      if (!key) {
+        showPopup("Invalid Key", "Please enter your admin key.", "error");
+        return;
+      }
+      if (key === ADMIN_KEY) {
+        unlockAdmin();
+        showPopup("Success", "Welcome, admin! You have access to all features.", "success");
+      } else {
+        showPopup("Invalid Key", "The admin key you entered is not valid.<br>Please try again.", "error");
+      }
+    };
+    document.getElementById('admin-key-input').addEventListener('keydown', function(e){
+      if (e.key === "Enter") document.getElementById('admin-key-btn').click();
+    });
+    // Save keys
+    document.getElementById('save-keys-btn').onclick = function() {
+      const pro = document.getElementById('pro-key').value.trim();
+      const ultimate = document.getElementById('ultimate-key').value.trim();
+      if (!pro || !ultimate) {
+        showPopup("Error", "Both Pro and Ultimate keys are required.", "error");
+        return;
+      }
+      saveKeys(pro, ultimate);
+      showPopup("Success", "Plan keys saved successfully.", "success");
+    };
+    // Save site settings
+    document.getElementById('save-site-btn').onclick = function() {
+      const name = document.getElementById('site-name').value.trim();
+      const logo = document.getElementById('site-logo').value.trim();
+      if (!name || !logo) {
+        showPopup("Error", "Site name and logo URL are required.", "error");
+        return;
+      }
+      saveSite(name, logo);
+      showPopup("Success", "Site settings saved!", "success");
+    };
+    // Add environment
+    document.getElementById('add-env-form').onsubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-env-name').value.trim();
+      const auth = document.getElementById('new-env-auth').value.trim();
+      if (!name) {
+        showPopup("Error", "Environment name is required.", "error");
+        return;
+      }
+      let envObj = name;
+      if (auth) envObj = {name, auth};
+      versionData.environments = versionData.environments || [];
+      versionData.environments.push(envObj);
+      saveEnvs(versionData.environments);
+      renderEnvs();
+      showPopup("Success", "Environment added.", "success");
+      document.getElementById('new-env-name').value = '';
+      document.getElementById('new-env-auth').value = '';
+    };
+    // Session limit
+    document.getElementById('save-session-btn').onclick = function() {
+      const limit = Number(document.getElementById('session-limit').value);
+      if (!limit || limit < 1 || limit > 120) {
+        showPopup("Error", "Session limit must be between 1 and 120 minutes.", "error");
+        return;
+      }
+      saveSessionLimit(limit);
+      showPopup("Success", "Session limit updated.", "success");
+    };
+    // Feature toggles
+    document.getElementById('toggle-feature-btn').onclick = function() {
+      const val = document.getElementById('feature-toggle').value;
+      versionData.featureToggles[val] = !versionData.featureToggles[val];
+      saveFeatureToggles(versionData.featureToggles);
+      showPopup("Success", `Feature <b>${val.replace(/-/g,' ').replace(/\b\w/g, l=>l.toUpperCase())}</b> is now <b>${versionData.featureToggles[val] ? "enabled" : "disabled"}</b>.`, "success");
+    };
+    // Broadcast
+    document.getElementById('send-broadcast-btn').onclick = function() {
+      const msg = document.getElementById('broadcast-msg').value.trim();
+      if (!msg) {
+        showPopup("Error", "Broadcast message cannot be empty.", "error");
+        return;
+      }
+      versionData.broadcasts.push({msg, date: new Date().toISOString()});
+      saveBroadcasts(versionData.broadcasts);
+      showPopup("Success", "Broadcast sent to all users.", "success");
+      document.getElementById('broadcast-msg').value = '';
+    };
+    // Backup
+    document.getElementById('backup-btn').onclick = function() {
+      const data = {
+        keys: {pro: versionData.pro, ultimate: versionData.ultimate},
+        environments: versionData.environments,
+        site: {siteName: versionData.siteName, siteLogo: versionData.siteLogo},
+        sessionLimit: versionData.sessionLimit,
+        featureToggles: versionData.featureToggles,
+        broadcasts: versionData.broadcasts
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "terbium-admin-backup.json";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 100);
+      showPopup("Success", "Backup downloaded.", "success");
+    };
+    document.getElementById('restore-btn').onclick = function() {
+      document.getElementById('restore-file').click();
+    };
+    document.getElementById('restore-file').onchange = function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (data.keys) saveKeys(data.keys.pro, data.keys.ultimate);
+          if (data.environments) saveEnvs(data.environments);
+          if (data.site) saveSite(data.site.siteName, data.site.siteLogo);
+          if (data.sessionLimit) saveSessionLimit(data.sessionLimit);
+          if (data.featureToggles) saveFeatureToggles(data.featureToggles);
+          if (data.broadcasts) saveBroadcasts(data.broadcasts);
+          loadAdminData();
+          unlockAdmin();
+          showPopup("Success", "Backup restored successfully.", "success");
+        } catch (err) {
+          showPopup("Error", "Invalid backup file.", "error");
+        }
+      };
+      reader.readAsText(file);
+    };
+    // Popup close
+    document.getElementById('admin-popup-close').onclick = function() {
+      document.getElementById('admin-popup-bg').style.display = "none";
+    };
+    document.getElementById('admin-popup-btn').onclick = function() {
+      document.getElementById('admin-popup-bg').style.display = "none";
+    };
+    // On load
+    loadAdminData();
+    requireAdmin();
+  </script>
+</body>
+</html>
+
+

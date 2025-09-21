@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "^/$", "status": 308, "headers": { "Location": "/landing/" } },
+    { "src": "^/help/?$", "status": 308, "headers": { "Location": "/landing/help/" } },
+    { "handle": "filesystem" }
+  ]
+}
+
+

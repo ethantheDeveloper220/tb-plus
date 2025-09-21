@@ -1,0 +1,14 @@
+{
+  "name": "Terbium",
+  "version": "2.1",
+  "environment": "dev",
+  "ownerKey": "tb-owner-1234",
+  "environments": ["normal", "beta"],
+  "plans": ["free", "pro", "ultimate"],
+  "keys": {
+    "pro": "TB-PRO-PLACEHOLDER",
+    "ultimate": "TB-ULT-PLACEHOLDER"
+  }
+}
+
+

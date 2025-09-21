@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Help & FAQ • Terbium</title>
+    <link rel="stylesheet" crossorigin href="/assets/index-ClmEQiFL.css">
+    <link rel="icon" href="/tb-landing.svg" />
+    <style>
+      body { margin:0; background: radial-gradient(1000px 500px at 20% -10%, rgba(125,211,252,.15), transparent), radial-gradient(800px 400px at 80% 0%, rgba(209,111,255,.12), transparent), linear-gradient(180deg, #0b0b0f, #12121a); color:#fff; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+      .container { max-width: 900px; margin: 0 auto; padding: 28px 16px 64px; }
+      .nav { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+      .brand { display:flex; align-items:center; gap:10px; }
+      .brand img { width:32px; height:32px; border-radius:8px; border:1px solid rgba(255,255,255,.08); background:#0f0f0f; }
+      .brand span { font-weight:800; letter-spacing:.4px; }
+      .nav a { color:#fff; opacity:.9; text-decoration:none; margin-left:12px; }
+      .nav .cta { padding:8px 12px; border-radius:10px; background:#2b6cb0; border:1px solid rgba(255,255,255,.08); }
+      h1 { font-size:clamp(28px,5vw,38px); margin:24px 0 10px; font-weight:900; letter-spacing:.2px; }
+      h2 { font-size:clamp(20px,3vw,26px); margin:24px 0 10px; font-weight:800; }
+      .faq { margin-top:28px; display:grid; grid-template-columns: 1fr; gap:14px; }
+      .q { background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 18px; }
+      .muted { opacity:.8; }
+      ul { margin:10px 0 10px 24px; }
+      .subdomains { margin:18px 0 0 0; }
+      .subdomains li { margin-bottom:4px; }
+      .footer { margin-top:36px; text-align:center; opacity:.6; font-size:14px; }
+      @media (max-width: 700px) {
+        .container { padding: 18px 4vw 40px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav">
+        <div class="brand"><img src="/tb-landing.svg" alt="Terbium"/><span>Terbium</span></div>
+        <div>
+          <a href="/plans/">Plans</a>
+          <a href="/docs/setup-guide">Docs</a>
+          <a class="cta" href="/">Launch</a>
+        </div>
+      </div>
+      <h1>Help & FAQ</h1>
+      <p class="muted">Find answers to common questions about Terbium, plans, features, and environments.</p>
+      <div class="faq" aria-label="FAQ">
+        <div class="q">
+          <strong>What are the available plans?</strong><br/>
+          <span class="muted">
+            Terbium offers three plans:
+            <ul>
+              <li><b>Free</b>: Core features, 5-minute session limit, no login required.</li>
+              <li><b>Pro</b>: Unlimited session time, advanced features, unlock with a Pro or Beta key.</li>
+              <li><b>Ultimate</b>: All features, owner server, custom environments, and more.</li>
+            </ul>
+            <a href="/plans/">See full plans & pricing</a>
+          </span>
+        </div>
+        <div class="q">
+          <strong>What features are locked for Pro or Ultimate?</strong><br/>
+          <span class="muted">
+            Some advanced features (like unlimited session time, certain apps, and integrations) are only available on Pro or Ultimate. Free users are limited to 5-minute sessions and core features.
+          </span>
+        </div>
+        <div class="q">
+          <strong>How does the Free session limit work?</strong><br/>
+          <span class="muted">
+            Free users can use Terbium for up to 5 minutes per session. To continue, upgrade to Pro or enter a Beta/Pro key. Ultimate users have no time limits.
+          </span>
+        </div>
+        <div class="q">
+          <strong>How do I unlock Pro or Beta features?</strong><br/>
+          <span class="muted">
+            Enter a valid Pro or Beta key in the app to unlock advanced features and remove session limits.
+          </span>
+        </div>
+        <div class="q">
+          <strong>Can I create custom environments?</strong><br/>
+          <span class="muted">
+            Yes! You can create your own custom environments. Optionally, you can require authentication for your custom environment for extra security.
+          </span>
+        </div>
+        <div class="q">
+          <strong>Is authentication required?</strong><br/>
+          <span class="muted">
+            No login is required for Free or Pro. For custom environments, you can enable authentication if you wish.
+          </span>
+        </div>
+        <div class="q">
+          <strong>What subdomains and pages exist?</strong><br/>
+          <span class="muted">
+            Here are the main subdomains and pages you can visit:
+            <ul class="subdomains">
+              <li><b>/</b> — Main app (redirects to <b>/landing/</b>)</li>
+              <li><b>/landing/</b> — Landing page</li>
+              <li><b>/plans/</b> — Plans & pricing</li>
+              <li><b>/docs/setup-guide</b> — Setup guide</li>
+              <li><b>/help/</b> — This help & FAQ page</li>
+              <li><b>/admin/panel/</b> — Admin panel (Ultimate/owner only)</li>
+              <li><b>/index.html</b> — Main app UI</li>
+              <li><b>/404.html</b> — Not found page</li>
+              <li><b>/dev/</b> — Dev environment (if enabled)</li>
+              <li><b>/beta/</b> — Beta environment (if enabled)</li>
+              <li><b>/sync/</b> — Sync server (Ultimate/owner only)</li>
+              <li><b>/tb.svg</b>, <b>/tb-landing.svg</b>, <b>/tb-ultimate.svg</b>, etc. — App icons</li>
+            </ul>
+            <span style="font-size:13px;opacity:.7;">Some subdomains or pages may require a specific plan or key.</span>
+          </span>
+        </div>
+        <div class="q">
+          <strong>Is Terbium open-source?</strong><br/>
+          <span class="muted">
+            The core site is static and extendable. Contact us for more details about open-source options.
+          </span>
+        </div>
+        <div class="q">
+          <strong>Will it work offline?</strong><br/>
+          <span class="muted">
+            Many features work offline via service workers and caching.
+          </span>
+        </div>
+      </div>
+      <div class="footer">
+        &copy; 2024 Terbium. <a href="/landing/" style="color:#fff;opacity:.7;">Back to landing</a>
+      </div>
+    </div>
+  </body>
+</html>

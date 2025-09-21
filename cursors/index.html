@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cursor Selection</title>
+    <link rel="stylesheet" crossorigin href="/assets/index-ClmEQiFL.css">
+    <style>
+      body { background:#0e0e0e; color:#fff; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+      .wrap { max-width: 480px; margin: 64px auto; padding: 0 16px; }
+      h1 { font-size: 26px; margin: 16px 0 8px; }
+      .folder-style-popup {
+        background: #181818;
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        box-shadow: 0 4px 32px #000a;
+        padding: 28px 24px 20px 24px;
+        max-width: 340px;
+        margin: 48px auto 0 auto;
+        text-align: center;
+        position: relative;
+        z-index: 10;
+      }
+      .folder-style-popup h2 {
+        font-size: 20px;
+        margin: 0 0 10px 0;
+        color: #3b82f6;
+      }
+      .folder-style-popup p {
+        opacity: .92;
+        margin-bottom: 18px;
+      }
+      .folder-style-popup a {
+        display: inline-block;
+        background: #3b82f6;
+        color: #fff;
+        padding: 8px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background .15s;
+      }
+      .folder-style-popup a:hover {
+        background: #2563eb;
+      }
+      .cursor-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 32px;
+        justify-content: center;
+      }
+      .cursor-item {
+        background: #151515;
+        border: 1.5px solid #222;
+        border-radius: 8px;
+        padding: 18px 24px;
+        font-size: 18px;
+        cursor: pointer;
+        transition: border .15s, background .15s;
+        min-width: 90px;
+        text-align: center;
+      }
+      .cursor-item:hover {
+        border: 1.5px solid #3b82f6;
+        background: #181f2a;
+      }
+      .upload-section {
+        margin-top: 40px;
+        background: #151515;
+        border: 1.5px solid #222;
+        border-radius: 10px;
+        padding: 22px 18px 18px 18px;
+        text-align: center;
+      }
+      .upload-section label {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .upload-section input[type="file"] {
+        margin: 10px 0 0 0;
+        color: #fff;
+      }
+      .custom-cursor-preview {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .custom-cursor-preview img {
+        max-width: 64px;
+        max-height: 64px;
+        border-radius: 6px;
+        border: 1px solid #333;
+        margin-bottom: 6px;
+        background: #222;
+      }
+      .custom-cursor-preview span {
+        font-size: 14px;
+        opacity: .8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Choose a Cursor</h1>
+      <div class="cursor-list">
+        <div class="cursor-item" data-cursor="default">Default</div>
+        <div class="cursor-item" data-cursor="beam">Beam</div>
+        <div class="cursor-item" data-cursor="block">Block</div>
+        <div class="cursor-item" data-cursor="underline">Underline</div>
+        <div class="cursor-item" data-cursor="custom">Custom</div>
+      </div>
+      <div class="upload-section">
+        <label for="cursor-upload">Upload your own cursor (.png, .jpg, .svg, .cur, .ico):</label>
+        <input type="file" id="cursor-upload" accept=".png,.jpg,.jpeg,.svg,.cur,.ico" />
+        <div class="custom-cursor-preview" id="custom-cursor-preview" style="display:none;">
+          <img id="cursor-preview-img" src="" alt="Custom Cursor Preview" />
+          <span id="cursor-preview-name"></span>
+        </div>
+      </div>
+    </div>
+    <div id="upgrade-popup" style="display:none;">
+      <div class="folder-style-popup">
+        <h2>Upgrade Required</h2>
+        <p>This feature is available for <b>Pro</b> or <b>Ultimate</b> plans.<br>
+        Upgrade your plan to unlock advanced cursor selection and uploading your own cursor.</p>
+        <a href="/plans/">View Plans</a>
+      </div>
+    </div>
+    <script>
+      // Simulate plan check: in real app, replace with actual plan logic
+      function getCurrentPlan() {
+        // Try to get from localStorage/sessionStorage, or fallback to "free"
+        return localStorage.getItem('terbium-plan') || "free";
+      }
+
+      function showUpgradePopup() {
+        document.getElementById('upgrade-popup').style.display = 'block';
+      }
+
+      function hideUpgradePopup() {
+        document.getElementById('upgrade-popup').style.display = 'none';
+      }
+
+      // Attach click handlers to cursor items
+      document.querySelectorAll('.cursor-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+          const plan = getCurrentPlan();
+          if (plan !== "pro" && plan !== "ultimate") {
+            showUpgradePopup();
+          } else {
+            // In a real app, perform the cursor selection here
+            if (item.dataset.cursor === "custom") {
+              alert('To use your uploaded cursor, upload a file below.');
+            } else {
+              alert('Cursor "' + item.dataset.cursor + '" selected!');
+            }
+          }
+        });
+      });
+
+      // Handle upload
+      document.getElementById('cursor-upload').addEventListener('change', function(e) {
+        const plan = getCurrentPlan();
+        if (plan !== "pro" && plan !== "ultimate") {
+          this.value = "";
+          showUpgradePopup();
+          return;
+        }
+        const file = e.target.files[0];
+        if (!file) return;
+        const allowed = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/x-icon', 'image/vnd.microsoft.icon', 'application/octet-stream'];
+        if (!allowed.includes(file.type) && !/\.(cur|ico)$/i.test(file.name)) {
+          alert('Unsupported file type.');
+          e.target.value = "";
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const preview = document.getElementById('custom-cursor-preview');
+          const img = document.getElementById('cursor-preview-img');
+          img.src = ev.target.result;
+          document.getElementById('cursor-preview-name').textContent = file.name;
+          preview.style.display = 'flex';
+          // In a real app, you would save the cursor and apply it
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // Optional: Hide popup when clicking outside
+      document.addEventListener('click', function(e) {
+        const popup = document.getElementById('upgrade-popup');
+        if (popup.style.display === 'block' && !popup.contains(e.target) && !e.target.classList.contains('cursor-item')) {
+          hideUpgradePopup();
+        }
+      });
+    </script>
+  </body>
+</html>
+

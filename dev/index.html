@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terbium • Dev Server</title>
+    <link rel="stylesheet" crossorigin href="/assets/index-ClmEQiFL.css">
+    <style>
+      body { background:#0e0e0e; color:#fff; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+      .wrap { max-width: 880px; margin: 48px auto; padding: 0 16px; }
+      h1 { font-size: 28px; margin: 16px 0 8px; }
+      p { opacity:.8; }
+      .card { background:#111; border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:16px; margin-top:16px; }
+      code { background:#151515; padding:2px 6px; border-radius:6px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Welcome to Dev Server</h1>
+      <p>This is the development environment for Terbium.</p>
+      <div class="card">
+        <div id="info">Loading…</div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px;font-size:16px;">Debug Tools</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="btn-reset" style="padding:8px 12px;border-radius:10px;background:#7b341e;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Reset App Data</button>
+          <button id="btn-toggle-eruda" style="padding:8px 12px;border-radius:10px;background:#1d4ed8;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Toggle Console</button>
+          <button id="btn-env" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Change Environment</button>
+          <button id="btn-plan" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Manage Plan</button>
+        </div>
+        <p id="owner-state" style="margin:8px 0 0;opacity:.8;">Owner: locked</p>
+        <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+          <input id="owner-key" type="password" placeholder="Owner key" style="flex:1;min-width:0;background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;color:#fff;" />
+          <button id="btn-owner" style="padding:8px 12px;border-radius:10px;background:#2b6cb0;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Unlock Owner</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px;font-size:16px;">Custom Environments</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button id="btn-add-env" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Add Custom</button>
+          <div id="list-envs" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (async () => {
+        try {
+          const res = await fetch('/version.json', { cache: 'no-store' });
+          const v = res.ok ? await res.json() : { version: 'unknown' };
+          document.title = 'Terbium (Dev)';
+          document.getElementById('info').textContent = `Terbium v${v.version} • Dev server`;
+          // Debug tools
+          const reset = async () => {
+            try {
+              localStorage.clear();
+              sessionStorage.clear();
+              if ('caches' in window) { const names = await caches.keys(); await Promise.all(names.map(n => caches.delete(n))); }
+              indexedDB.databases ? (await indexedDB.databases()).forEach(db => indexedDB.deleteDatabase(db.name)) : null;
+              alert('Data reset. Reloading…');
+              location.reload();
+            } catch (e) { alert('Reset failed'); }
+          };
+          const toggleEruda = () => {
+            const enabled = localStorage.getItem('eruda');
+            if (enabled) { localStorage.removeItem('eruda'); alert('Console disabled. Reload to take effect.'); }
+            else { localStorage.setItem('eruda', '1'); alert('Console enabled. Reload to open.'); }
+          };
+          const changeEnv = () => {
+            sessionStorage.removeItem('tb:envPromptShown');
+            localStorage.removeItem('tb:environment');
+            location.href = '/';
+          };
+          document.getElementById('btn-reset').onclick = reset;
+          document.getElementById('btn-toggle-eruda').onclick = toggleEruda;
+          document.getElementById('btn-env').onclick = changeEnv;
+          document.getElementById('btn-plan').onclick = () => { location.href = '/?choosePlan'; };
+          // Owner unlock
+          const ownerState = document.getElementById('owner-state');
+          const updateOwner = () => { ownerState.textContent = 'Owner: ' + (localStorage.getItem('tb:owner') === '1' ? 'unlocked' : 'locked'); };
+          updateOwner();
+          document.getElementById('btn-owner').onclick = () => {
+            const key = document.getElementById('owner-key').value.trim();
+            if (key && v.ownerKey && key === v.ownerKey) { localStorage.setItem('tb:owner', '1'); updateOwner(); alert('Owner unlocked'); }
+            else { alert('Invalid key'); }
+          };
+          // Custom envs
+          const listWrap = document.getElementById('list-envs');
+          const render = () => {
+            try {
+              const list = JSON.parse(localStorage.getItem('tb:customEnvs')||'[]');
+              listWrap.innerHTML = '';
+              list.forEach(e=>{
+                const btn = document.createElement('button');
+                btn.textContent = e.name;
+                btn.style.cssText = "padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;";
+                btn.onclick = () => { localStorage.setItem('tb:environment', `custom:${e.name}`); alert('Environment set to '+e.name); };
+                listWrap.appendChild(btn);
+              })
+            } catch {}
+          };
+          render();
+          document.getElementById('btn-add-env').onclick = () => {
+            const name = prompt('Custom environment name');
+            if (!name) return;
+            try {
+              const list = JSON.parse(localStorage.getItem('tb:customEnvs')||'[]');
+              if (!list.find(e=>e&&e.name===name)) list.push({name});
+              localStorage.setItem('tb:customEnvs', JSON.stringify(list));
+              render();
+            } catch {}
+          };
+        } catch (e) {
+          document.title = 'Terbium (Dev)';
+          document.getElementById('info').textContent = 'Dev server';
+        }
+      })();
+    </script>
+  </body>
+  </html>
+
+

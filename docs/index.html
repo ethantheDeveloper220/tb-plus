@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terbium • Docs</title>
+    <link rel="stylesheet" crossorigin href="/assets/index-ClmEQiFL.css">
+    <style>
+      body { background:#0e0e0e; color:#fff; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'; }
+      .wrap { max-width: 980px; margin: 48px auto; padding: 0 16px; }
+      h1 { font-size: 28px; margin: 16px 0 8px; }
+      p { opacity:.85; }
+      .card { background:#111; border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:16px; margin-top:16px; }
+      code { background:#151515; padding:2px 6px; border-radius:6px; }
+      pre { background:#0f0f0f; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px; overflow:auto; }
+    </style>
+  </head>
+  <body>
+    <div id="maint" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:saturate(1.2) blur(6px);z-index:10;align-items:center;justify-content:center;">
+      <div class="card" style="max-width:560px">
+        <h2 style="margin:0 0 6px;font-size:18px;">Sorry, site is down for maintenance</h2>
+        <p>Come back later. Admin pages remain available.</p>
+        <a href="/admin/panel/" class="cta">Go to Admin</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <h1>Documentation</h1>
+      <div class="card">
+        <h2 style="margin:0 0 6px;font-size:18px;">Setup Guide</h2>
+        <ol>
+          <li>Open the app at <code>/</code>. Pick an environment (Normal/Beta or Custom).</li>
+          <li>Choose a plan: press <code>Ctrl+Shift+P</code> or visit <code>/plans</code>.</li>
+          <li>Dev tools: visit <code>/dev</code> for reset, console, and environment tools.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px;font-size:18px;">API Check</h2>
+        <p>Quick test of browser capabilities.</p>
+        <ul id="api-list" style="opacity:.9"></ul>
+      </div>
+      <div class="card">
+        <h2 style="margin:0 0 6px;font-size:18px;">Examples</h2>
+        <p>Open the plan picker programmatically:</p>
+        <pre><code>window.dispatchEvent(new KeyboardEvent('keydown', {ctrlKey:true, shiftKey:true, key:'P'}));</code></pre>
+        <p>Gate a feature in your HTML:</p>
+        <pre><code>&lt;button data-plan-required="pro" data-feature-name="Customize"&gt;Customize&lt;/button&gt;</code></pre>
+      </div>
+    </div>
+    <script>
+      (function(){
+        const list = document.getElementById('api-list');
+        const checks = [
+          ['ServiceWorker', !!navigator.serviceWorker],
+          ['CacheStorage', 'caches' in window],
+          ['IndexedDB', 'indexedDB' in window],
+          ['File System Access', 'showOpenFilePicker' in window || 'chooseFileSystemEntries' in window],
+          ['SharedArrayBuffer', 'SharedArrayBuffer' in window],
+          ['WebAssembly', 'WebAssembly' in window],
+        ];
+        list.innerHTML = checks.map(([n, ok])=>`<li>${n}: <span style="color:${ok?'#22c55e':'#ef4444'}">${ok?'OK':'Missing'}</span></li>`).join('');
+        try { const t = JSON.parse(localStorage.getItem('tb:admin:featureToggles')||'{}'); if (t.maintenance) { if (!location.pathname.startsWith('/admin') && localStorage.getItem('tb:owner')!=='1') { const m=document.getElementById('maint'); m.style.display='flex'; document.body.style.overflow='hidden'; } } } catch {}
+      })();
+    </script>
+  </body>
+  </html>
+
+

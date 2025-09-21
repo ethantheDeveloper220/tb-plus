@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terbium</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link id="dynamic-favicon" rel="icon" href="/favicon.ico" />
+    <meta name="title" content="Terbium" />
+    <meta name="description" content="The next generation of Terbium. built to last." />
+    <meta name="theme-color" content="#D16FFF" />
+    <meta property="og:image" content="/tb.svg" />
+    <meta name="google-adsense-account" content="ca-pub-2875368391887289" />
+    <script type="module" crossorigin src="/assets/index-CWxad7_u.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-ClmEQiFL.css">
+    <style id="plan-gate-style">
+      [data-gated="true"]{
+        opacity:.55; filter:saturate(.6); cursor:not-allowed !important;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      (function(){
+        try {
+          var url = new URL(location.href);
+          if (url.searchParams.get('skipLanding') === '1') {
+            // keep going to app
+          } else if (sessionStorage.getItem('tb:launched_session') !== '1' && !location.pathname.startsWith('/admin')) {
+            // first-time in this tab: go to landing
+            if (location.pathname === '/' || location.pathname === '/index.html') {
+              location.replace('/landing/');
+            }
+          }
+        } catch(e){}
+      })();
+    </script>
+    <div id="root" class="flex flex-col h-full bg-[#0e0e0e] overflow-hidden"></div>
+    <div id="env-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:saturate(1.2) blur(6px);z-index:9999;align-items:center;justify-content:center;">
+      <div style="width:min(520px,92vw);background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;color:#fff;font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <h2 style="margin:0;font-size:18px;">Select Environment</h2>
+          <button id="env-close" style="background:transparent;border:0;color:#fff;opacity:.7;cursor:pointer;font-size:20px;">×</button>
+        </div>
+        <p style="margin:6px 0 12px;opacity:.8;">Terbium <span id="env-version">v?</span>. Choose where to run:</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button id="env-normal" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Normal</button>
+          <button id="env-beta" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Beta</button>
+          <button id="env-custom" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Custom…</button>
+        </div>
+        <div id="env-customs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"></div>
+        <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;display:flex;gap:8px;align-items:center;">
+          <input id="owner-key" type="password" placeholder="Owner key" style="flex:1;min-width:0;background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;color:#fff;" />
+          <button id="owner-unlock" style="padding:8px 12px;border-radius:10px;background:#2b6cb0;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Unlock Owner</button>
+        </div>
+        <p id="env-hint" style="margin:8px 0 0;font-size:12px;opacity:.7;">You can change this later in /dev.</p>
+      </div>
+    </div>
+    <div id="plan-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:saturate(1.2) blur(6px);z-index:10000;align-items:center;justify-content:center;">
+      <div style="width:min(520px,92vw);background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;color:#fff;font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <h2 style="margin:0;font-size:18px;">Choose Plan</h2>
+          <button id="plan-close" style="background:transparent;border:0;color:#fff;opacity:.7;cursor:pointer;font-size:20px;">×</button>
+        </div>
+        <p style="margin:6px 0 12px;opacity:.8;">Free allows 5 minutes per session. Pro/Ultimate unlock unlimited usage.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button id="plan-free" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Continue Free</button>
+          <button id="plan-pro" style="padding:8px 12px;border-radius:10px;background:#2b6cb0;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Activate Pro</button>
+          <button id="plan-ult" style="padding:8px 12px;border-radius:10px;background:#7c3aed;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Activate Ultimate</button>
+          <a href="/plans/" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;text-decoration:none;">Plans</a>
+        </div>
+        <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;display:flex;gap:8px;align-items:center;">
+          <input id="plan-key" type="text" placeholder="Enter Pro/Ultimate key" style="flex:1;min-width:0;background:#0f0f0f;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:8px 10px;color:#fff;" />
+          <button id="plan-apply" style="padding:8px 12px;border-radius:10px;background:#16a34a;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Apply</button>
+        </div>
+        <p id="plan-hint" style="margin:8px 0 0;font-size:12px;opacity:.7;">Tip: open this anytime with Ctrl+Shift+P.</p>
+      </div>
+    </div>
+    <div id="gate-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:saturate(1.2) blur(6px);z-index:10001;align-items:center;justify-content:center;">
+      <div style="width:min(560px,92vw);background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;color:#fff;font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';">
+        <div style="display:flex;gap:12px;align-items:center;">
+          <img src="/tb.svg" alt="Terbium" style="width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:#0f0f0f;" />
+          <div>
+            <h2 style="margin:0;font-size:18px;">This feature needs a plan</h2>
+            <p id="gate-text" style="margin:4px 0 0;opacity:.8;font-size:14px;">Upgrade to unlock.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <a href="/plans/" style="padding:8px 12px;border-radius:10px;background:#2b6cb0;border:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;">View plans & pricing</a>
+          <button id="gate-close" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;">Close</button>
+          <a href="/docs/setup-guide" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;">Read docs</a>
+        </div>
+      </div>
+    </div>
+    <div id="lock-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:saturate(1.2) blur(7px);z-index:10002;align-items:center;justify-content:center;">
+      <div style="width:min(560px,92vw);background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;color:#fff;font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';text-align:left;">
+        <div style="display:flex;gap:12px;align-items:center;">
+          <img src="/tb.svg" alt="Terbium" style="width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:#0f0f0f;" />
+          <div>
+            <h2 style="margin:0;font-size:18px;">Free session ended</h2>
+            <p style="margin:4px 0 0;opacity:.8;font-size:14px;">Upgrade to continue using all features.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <a href="/plans/" style="padding:8px 12px;border-radius:10px;background:#2b6cb0;border:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;">View plans & pricing</a>
+          <a href="/docs/setup-guide" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;">Read setup guide</a>
+        </div>
+      </div>
+    </div>
+    <div id="maint-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.86);backdrop-filter:saturate(1.2) blur(6px);z-index:10010;align-items:center;justify-content:center;">
+      <div style="width:min(560px,92vw);background:#111;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px;color:#fff;font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';text-align:left;">
+        <div style="display:flex;gap:12px;align-items:center;">
+          <img src="/tb-admin.svg" alt="Maintenance" style="width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:#0f0f0f;" />
+          <div>
+            <h2 style="margin:0;font-size:18px;">Sorry, site is down for maintenance</h2>
+            <p style="margin:4px 0 0;opacity:.8;font-size:14px;">Come back later. Admin pages remain available.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+          <a href="/admin/panel/" style="padding:8px 12px;border-radius:10px;background:#2b6cb0;border:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;">Go to Admin</a>
+          <a href="/docs/setup-guide" style="padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;text-decoration:none;">Read setup guide</a>
+        </div>
+      </div>
+    </div>
+    <script src="/scram/scramjet.all.js"></script>
+
+
+    <script src="assets/libs/filer.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/eruda" onload="if (localStorage.getItem('eruda'))  window.eruda.init()"></script>
+    <script>
+      (async () => {
+        try {
+          const res = await fetch('/version.json', { cache: 'no-store' });
+          const v = res.ok ? await res.json() : { environment: '', version: '?' };
+          const chosenEnv = (localStorage.getItem('tb:environment') || '').toLowerCase();
+          const isDev = location.pathname.startsWith('/dev') || (String(v.environment).toLowerCase() === 'dev' && chosenEnv !== 'normal');
+          if (chosenEnv === 'normal') {
+            document.title = 'Terbium';
+          } else if (chosenEnv === 'beta') {
+            document.title = 'Terbium (Beta)';
+          } else if (isDev) {
+            document.title = 'Terbium (Dev)';
+          }
+          const updateBranding = () => {
+            const plan = localStorage.getItem('tb:plan') || 'free';
+            const icon = document.getElementById('dynamic-favicon');
+            if (!icon) return;
+            if (plan === 'ultimate') icon.href = '/tb-ultimate.svg';
+            else if (plan === 'pro') icon.href = '/tb-pro.svg';
+            else icon.href = '/favicon.ico';
+          };
+          updateBranding();
+          document.addEventListener('tb:plan-change', updateBranding);
+
+          const envChoice = localStorage.getItem('tb:environment');
+          const hasShown = sessionStorage.getItem('tb:envPromptShown');
+          const url = new URL(location.href);
+          const forcePicker = url.searchParams.has('chooseEnv') || location.hash.includes('choose-env');
+          const shouldPrompt = (!envChoice && !hasShown) || forcePicker;
+          if (document.getElementById('env-version')) document.getElementById('env-version').textContent = v.version || '?';
+
+          function setEnv(env) {
+            localStorage.setItem('tb:environment', env);
+            sessionStorage.setItem('tb:envPromptShown', '1');
+            // For now, both use same code; reflect label in title only
+            if (env === 'beta') {
+              document.title = 'Terbium (Beta)';
+            } else if (env === 'normal') {
+              document.title = 'Terbium';
+            }
+            document.getElementById('env-modal').style.display = 'none';
+          }
+          function setCustomEnv(name) {
+            if (!name) return;
+            localStorage.setItem('tb:environment', `custom:${name}`);
+            sessionStorage.setItem('tb:envPromptShown', '1');
+            document.getElementById('env-modal').style.display = 'none';
+          }
+
+          function unlockOwner() {
+            const key = document.getElementById('owner-key').value.trim();
+            if (!key) return;
+            if (key === v.ownerKey) {
+              localStorage.setItem('tb:owner', '1');
+              alert('Owner features unlocked');
+            } else {
+              alert('Invalid key');
+            }
+          }
+
+          const modal = document.getElementById('env-modal');
+          const openPicker = () => {
+            if (!modal) return;
+            modal.style.display = 'flex';
+            document.getElementById('env-normal').onclick = () => setEnv('normal');
+            document.getElementById('env-beta').onclick = () => setEnv('beta');
+            document.getElementById('env-custom').onclick = () => {
+              const name = prompt('Custom environment name');
+              if (name) {
+                // save to list
+                try {
+                  const list = JSON.parse(localStorage.getItem('tb:customEnvs')||'[]');
+                  if (!list.find(e=>e&&e.name===name)) list.push({name});
+                  localStorage.setItem('tb:customEnvs', JSON.stringify(list));
+                } catch {}
+                setCustomEnv(name);
+              }
+            };
+            document.getElementById('env-close').onclick = () => { modal.style.display = 'none'; sessionStorage.setItem('tb:envPromptShown', '1'); };
+            document.getElementById('owner-unlock').onclick = unlockOwner;
+            // render saved customs
+            try {
+              const list = JSON.parse(localStorage.getItem('tb:customEnvs')||'[]');
+              const wrap = document.getElementById('env-customs');
+              wrap.innerHTML = '';
+              list.forEach(e=>{
+                const btn = document.createElement('button');
+                btn.textContent = e.name;
+                btn.style.cssText = "padding:8px 12px;border-radius:10px;background:#1d1d1d;border:1px solid rgba(255,255,255,.08);color:#fff;cursor:pointer;";
+                btn.onclick = () => setCustomEnv(e.name);
+                wrap.appendChild(btn);
+              });
+            } catch {}
+          };
+          if (shouldPrompt) openPicker();
+          // Keyboard shortcut: Ctrl+Shift+E to open picker
+          window.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && String(e.key).toLowerCase() === 'e') {
+              e.preventDefault();
+              openPicker();
+            }
+          });
+
+          // Plans and gating
+          const planModal = document.getElementById('plan-modal');
+          const setPlan = (plan) => {
+            localStorage.setItem('tb:plan', plan);
+            localStorage.setItem('tb:lastPlan', plan);
+            if (plan === 'free') {
+              localStorage.setItem('tb:freeStart', String(Date.now()));
+            }
+            document.dispatchEvent(new CustomEvent('tb:plan-change', { detail: { plan } }));
+          };
+          const applyKey = (key) => {
+            if (!key) return false;
+            if (v.keys && key === v.keys.pro) { setPlan('pro'); return 'pro'; }
+            if (v.keys && key === v.keys.ultimate) { setPlan('ultimate'); return 'ultimate'; }
+            return false;
+          };
+          const openPlan = (forceUpgrade=false) => {
+            if (!planModal) return;
+            planModal.style.display = 'flex';
+            document.getElementById('plan-close').style.display = forceUpgrade ? 'none' : '';
+            document.getElementById('plan-free').style.display = forceUpgrade ? 'none' : '';
+            document.getElementById('plan-free').onclick = () => { setPlan('free'); planModal.style.display='none'; };
+            document.getElementById('plan-pro').onclick = () => { const r = applyKey(prompt('Enter Pro key')); if (r) planModal.style.display='none'; else alert('Invalid key'); };
+            document.getElementById('plan-ult').onclick = () => { const r = applyKey(prompt('Enter Ultimate key')); if (r) planModal.style.display='none'; else alert('Invalid key'); };
+            document.getElementById('plan-apply').onclick = () => { const key = document.getElementById('plan-key').value.trim(); const r = applyKey(key); if (r) planModal.style.display='none'; else alert('Invalid key'); };
+            document.getElementById('plan-close').onclick = () => { planModal.style.display='none'; };
+          };
+          const plan = localStorage.getItem('tb:plan') || 'free';
+          if (!localStorage.getItem('tb:plan')) setPlan('free');
+          // No more automatic plan popups; enforce 30m free limit silently with gate
+          if (url.searchParams.has('choosePlan') || location.hash.includes('choose-plan')) openPlan(false);
+          window.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && String(e.key).toLowerCase() === 'p') {
+              e.preventDefault();
+              openPlan(false);
+            }
+          });
+
+          // Feature gating
+          const rank = (p) => (p === 'ultimate' ? 3 : p === 'pro' ? 2 : 1);
+          const hasPlan = (required) => rank(localStorage.getItem('tb:plan') || 'free') >= rank(required || 'free');
+          const isAdminRoute = location.pathname.startsWith('/admin');
+          const isOwner = localStorage.getItem('tb:owner') === '1';
+          const isMaintenanceOn = () => {
+            try { const t = JSON.parse(localStorage.getItem('tb:admin:featureToggles')||'{}'); return !!t.maintenance; } catch { return false; }
+          };
+          const showMaintenance = () => {
+            const ov = document.getElementById('maint-overlay');
+            if (ov) ov.style.display = 'flex';
+            const root = document.getElementById('root');
+            if (root) root.style.pointerEvents = 'none';
+          };
+          const hideMaintenance = () => {
+            const ov = document.getElementById('maint-overlay');
+            if (ov) ov.style.display = 'none';
+            const root = document.getElementById('root');
+            if (root) root.style.pointerEvents = '';
+          };
+          const enforceMaintenance = () => {
+            if (isAdminRoute || isOwner) { hideMaintenance(); return true; }
+            if (isMaintenanceOn()) { showMaintenance(); return false; }
+            hideMaintenance();
+            return true;
+          };
+          enforceMaintenance();
+          const enforceFreeTimer = () => {
+            if ((localStorage.getItem('tb:plan')||'free') !== 'free') return true;
+            const startKey = 'tb:freeStart';
+            let start = Number(localStorage.getItem(startKey) || 0);
+            if (!start) { start = Date.now(); localStorage.setItem(startKey, String(start)); }
+            const elapsed = Date.now() - start;
+            if (elapsed >= 30 * 60 * 1000) { // 30 minutes
+              openGate('pro', 'Session time');
+              return false;
+            }
+            return true;
+          };
+          const lockApp = () => {
+            const ov = document.getElementById('lock-overlay');
+            if (ov) ov.style.display = 'flex';
+            const root = document.getElementById('root');
+            if (root) root.style.pointerEvents = 'none';
+          };
+          const unlockApp = () => {
+            const ov = document.getElementById('lock-overlay');
+            if (ov) ov.style.display = 'none';
+            const root = document.getElementById('root');
+            if (root) root.style.pointerEvents = '';
+          };
+          const openGate = (required, feature) => {
+            const gm = document.getElementById('gate-modal');
+            const txt = document.getElementById('gate-text');
+            if (txt) txt.textContent = `${feature || 'This'} requires ${required} plan or higher.`;
+            gm.style.display = 'flex';
+            document.getElementById('gate-close').onclick = () => { gm.style.display = 'none'; };
+          };
+          window.tbGateFeature = (required, feature) => {
+            if (!hasPlan(required)) { openGate(required, feature); return false; }
+            return true;
+          };
+          document.addEventListener('click', (e) => {
+            const el = e.target.closest('[data-plan-required]');
+            if (!el) return;
+            const req = el.getAttribute('data-plan-required');
+            const name = el.getAttribute('data-feature-name') || el.getAttribute('aria-label') || el.textContent?.trim() || 'this feature';
+            if (!hasPlan(req) || !enforceFreeTimer()) {
+              e.preventDefault();
+              e.stopPropagation();
+              openGate(req, name);
+            }
+          }, true);
+
+          // Auto-tag common features for gating without modifying app bundle
+          const keywordPlanMap = [
+            { kw: ['customize','theme','wallpaper','cursor'], plan: 'pro', name: 'Customize' },
+            { kw: ['settings','preferences'], plan: 'pro', name: 'Settings' },
+            { kw: ['account','profile','login','signup'], plan: 'pro', name: 'Account' },
+            { kw: ['cloud','sync','backup'], plan: 'pro', name: 'Cloud Sync' },
+            { kw: ['owner','server','admin'], plan: 'ultimate', name: 'Owner Server' }
+          ];
+          const isClickable = (el) => {
+            if (!el) return false;
+            const tag = (el.tagName||'').toLowerCase();
+            if (tag === 'a' || tag === 'button') return true;
+            const role = (el.getAttribute && el.getAttribute('role')) || '';
+            if (role === 'button' || role === 'link') return true;
+            const onclick = el.getAttribute && el.getAttribute('onclick');
+            return !!onclick;
+          };
+          const tagElementIfMatch = (el) => {
+            if (!isClickable(el)) return;
+            if (el.hasAttribute('data-plan-required')) return;
+            const text = (el.getAttribute('aria-label') || el.textContent || '').toLowerCase();
+            for (const rule of keywordPlanMap) {
+              if (rule.kw.some(k => text.includes(k))) {
+                el.setAttribute('data-plan-required', rule.plan);
+                el.setAttribute('data-feature-name', rule.name);
+                break;
+              }
+            }
+          };
+          const updateGatedStyles = () => {
+            const currPlan = localStorage.getItem('tb:plan') || 'free';
+            document.querySelectorAll('[data-plan-required]').forEach(el => {
+              const req = el.getAttribute('data-plan-required');
+              const gated = rank(currPlan) < rank(req || 'free');
+              if (gated) el.setAttribute('data-gated','true'); else el.removeAttribute('data-gated');
+            });
+          };
+          const scanAll = (root=document) => {
+            root.querySelectorAll('a,button,[role="button"],[role="link"]').forEach(tagElementIfMatch);
+            updateGatedStyles();
+          };
+          const mo = new MutationObserver((mutations) => {
+            for (const m of mutations) {
+              m.addedNodes && m.addedNodes.forEach(n => {
+                if (n.nodeType === 1) { tagElementIfMatch(n); scanAll(n); }
+              });
+            }
+          });
+          mo.observe(document.body, { childList: true, subtree: true });
+          scanAll();
+          document.addEventListener('tb:plan-change', updateGatedStyles);
+          // Background timer enforcement with hard lock overlay
+          setInterval(()=>{ if (!enforceFreeTimer()) lockApp(); }, 5000);
+        } catch (e) {
+          // ignore
+        }
+      })();
+    </script>
+  </body>
+</html>
